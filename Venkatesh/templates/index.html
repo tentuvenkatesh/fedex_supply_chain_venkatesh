@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Supply Chain Disruption Risk Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Supply Chain Disruption Risk Dashboard</h1>
+  </header>
+
+  <div class="container">
+    <!-- Filters -->
+    <section class="controls">
+      <h2>Filters</h2>
+
+      <div class="control-row">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" value="2020-01-01" />
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" value="2024-12-31" />
+      </div>
+
+      <div class="control-row">
+        <label for="deliveryStatus">Delivery Status</label>
+        <select id="deliveryStatus" multiple></select>
+
+        <label for="customerCountry">Customer Country</label>
+        <select id="customerCountry" multiple></select>
+
+        <label for="category">Category</label>
+        <select id="category" multiple></select>
+      </div>
+
+      <div class="control-buttons">
+        <button class="btn-primary" id="applyFilters">Apply Filters</button>
+        <button class="btn-warning" id="resetFilters">Reset</button>
+        <button class="btn-success" id="downloadData">Download Filtered Data</button>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpis">
+      <div><span>Total Orders</span><strong id="totalOrders">0</strong></div>
+      <div><span>Late Deliveries</span><strong id="lateDeliveryPercent">0%</strong></div>
+      <div><span>Avg Shipping Delay (days)</span><strong id="avgShippingDelay">0</strong></div>
+      <div><span>Avg Profit per Order</span><strong id="avgProfit">$0</strong></div>
+    </section>
+
+    <!-- Tabs -->
+    <nav class="tab-nav" role="tablist" aria-label="Visualization Tabs">
+      <button class="tab-btn active" data-tab="overview" aria-selected="true">Overview</button>
+      <button class="tab-btn" data-tab="frequency" aria-selected="false">Frequency Modeling</button>
+      <button class="tab-btn" data-tab="severity" aria-selected="false">Severity Modeling</button>
+      <button class="tab-btn" data-tab="simulation" aria-selected="false">Scenario Simulation</button>
+    </nav>
+
+    <!-- Tab: Overview -->
+    <section id="overview" class="tab-content active" role="tabpanel" aria-labelledby="tab-overview">
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Shipping Delay Trends</h3>
+          <div class="chart-container"><canvas id="delayTrendsChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Delivery Status Distribution</h3>
+          <div class="chart-container"><canvas id="deliveryStatusChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Late Deliveries by Country</h3>
+          <div class="chart-container"><canvas id="countryRiskChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Frequency -->
+    <section id="frequency" class="tab-content" role="tabpanel" aria-labelledby="tab-frequency">
+      <div class="charts">
+        <div class="chart-card full">
+          <h3>Inter-arrival Time Distribution</h3>
+          <div class="chart-container"><canvas id="interArrivalChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Severity -->
+    <section id="severity" class="tab-content" role="tabpanel" aria-labelledby="tab-severity">
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Profit by Delivery Status (Median)</h3>
+          <div class="chart-container"><canvas id="profitBoxChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Profit Density</h3>
+          <div class="chart-container"><canvas id="profitDensityChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Simulation -->
+    <section id="simulation" class="tab-content" role="tabpanel" aria-labelledby="tab-simulation">
+      <div class="simulation controls">
+        <h2>Monte Carlo Simulation</h2>
+        <div class="control-row">
+          <label for="numSimulations">Simulations</label>
+          <input type="number" id="numSimulations" min="100" max="10000" value="1000" />
+          <label for="timeHorizon">Time Horizon (days)</label>
+          <input type="number" id="timeHorizon" min="30" max="2000" value="365" />
+          <label for="distribution">Distribution</label>
+          <select id="distribution">
+            <option value="weibull">Weibull</option>
+            <option value="exponential">Exponential</option>
+          </select>
+          <button class="btn-danger" id="runSimulation">Run Simulation</button>
+        </div>
+        <div class="charts">
+          <div class="chart-card">
+            <h3>Simulated Disruption Counts</h3>
+            <div class="chart-container"><canvas id="simulationCountChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Expected Cost Distribution</h3>
+            <div class="chart-container"><canvas id="simulationCostChart"></canvas></div>
+          </div>
+        </div>
+        <pre id="simulationResult"></pre>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
